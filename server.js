@@ -17,6 +17,20 @@ app.use((req, _res, next) => {
   next();
 });
 
+// -------------------------------------------------------------
+// Health-check — útil pra abrir no navegador e confirmar que o
+// servidor está no ar (browser sempre faz GET).
+// -------------------------------------------------------------
+app.get('/', (_req, res) => {
+  res.json({
+    status: 'ok',
+    rotas: [
+      'POST /eventos/pedido',
+      'POST /eventos/pagamento',
+    ],
+  });
+});
+
 // =============================================================
 // Exercício 1 + 2 — POST /eventos/pedido
 // =============================================================

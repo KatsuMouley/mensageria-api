@@ -1,0 +1,77 @@
+### ============================================================
+### Eventos API — requests para a extensão REST Client (VS Code)
+### Extensão: humao.rest-client  (gratuita)
+### Como usar: clique em "Send Request" acima de cada bloco.
+### ============================================================
+
+@baseUrl = http://localhost:3000
+
+### -----------------------------------------------------------
+### Health-check (GET) — só pra confirmar que o servidor subiu
+### Esperado: 200 OK
+### -----------------------------------------------------------
+GET {{baseUrl}}/
+
+### -----------------------------------------------------------
+### EX 1 — Pedido válido
+### Esperado: 202 Accepted
+### -----------------------------------------------------------
+POST {{baseUrl}}/eventos/pedido
+Content-Type: application/json
+
+{
+  "pedidoId": "abc-123",
+  "cliente": "Katsu",
+  "produto": "Notebook",
+  "quantidade": 2,
+  "valor": 5000
+}
+
+### -----------------------------------------------------------
+### EX 2a — Pedido sem o campo `produto`
+### Esperado: 400 Bad Request — erro CAMPOS_OBRIGATORIOS_AUSENTES
+### -----------------------------------------------------------
+POST {{baseUrl}}/eventos/pedido
+Content-Type: application/json
+
+{
+  "pedidoId": "abc-123",
+  "cliente": "Katsu",
+  "quantidade": 2,
+  "valor": 5000
+}
+
+### -----------------------------------------------------------
+### EX 2b — Pedido com body vazio
+### Esperado: 400 Bad Request — erro BODY_VAZIO
+### -----------------------------------------------------------
+POST {{baseUrl}}/eventos/pedido
+Content-Type: application/json
+
+{}
+
+### -----------------------------------------------------------
+### EX 3a — Pagamento válido
+### Esperado: 202 Accepted
+### -----------------------------------------------------------
+POST {{baseUrl}}/eventos/pagamento
+Content-Type: application/json
+
+{
+  "pedidoId": "abc-123",
+  "valor": 5000,
+  "metodo": "pix"
+}
+
+### -----------------------------------------------------------
+### EX 3b — Pagamento com valor negativo
+### Esperado: 400 Bad Request — erro VALOR_INVALIDO
+### -----------------------------------------------------------
+POST {{baseUrl}}/eventos/pagamento
+Content-Type: application/json
+
+{
+  "pedidoId": "abc-123",
+  "valor": -100,
+  "metodo": "pix"
+}
