@@ -1,0 +1,117 @@
+{
+  "clientName": "Thunder Client",
+  "collectionName": "Eventos",
+  "collectionId": "eventos-collection",
+  "dateExported": "2026-05-13T00:00:00.000Z",
+  "version": "1.2",
+  "folders": [
+    { "_id": "folder-pedido",    "name": "Pedido",    "containerId": "", "sortNum": 10000, "created": "2026-05-13T00:00:00.000Z", "sortNum1": 10000 },
+    { "_id": "folder-pagamento", "name": "Pagamento", "containerId": "", "sortNum": 20000, "created": "2026-05-13T00:00:00.000Z", "sortNum1": 20000 }
+  ],
+  "requests": [
+    {
+      "_id": "req-pedido-valido",
+      "colId": "eventos-collection",
+      "containerId": "folder-pedido",
+      "name": "Pedido — válido (202)",
+      "url": "http://localhost:3000/eventos/pedido",
+      "method": "POST",
+      "sortNum": 11000,
+      "created": "2026-05-13T00:00:00.000Z",
+      "modified": "2026-05-13T00:00:00.000Z",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"pedidoId\": \"abc-123\",\n  \"cliente\": \"Katsu\",\n  \"produto\": \"Notebook\",\n  \"quantidade\": 2,\n  \"valor\": 5000\n}",
+        "form": []
+      },
+      "tests": [
+        { "type": "res-code",        "custom": "",         "action": "equal",    "value": "202" },
+        { "type": "json-query",      "custom": "json.status",   "action": "equal", "value": "aceito" },
+        { "type": "json-query",      "custom": "json.pedidoId", "action": "equal", "value": "abc-123" }
+      ]
+    },
+    {
+      "_id": "req-pedido-sem-produto",
+      "colId": "eventos-collection",
+      "containerId": "folder-pedido",
+      "name": "Pedido — sem produto (400)",
+      "url": "http://localhost:3000/eventos/pedido",
+      "method": "POST",
+      "sortNum": 12000,
+      "created": "2026-05-13T00:00:00.000Z",
+      "modified": "2026-05-13T00:00:00.000Z",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"pedidoId\": \"abc-123\",\n  \"cliente\": \"Katsu\",\n  \"quantidade\": 2,\n  \"valor\": 5000\n}",
+        "form": []
+      },
+      "tests": [
+        { "type": "res-code",   "custom": "",                       "action": "equal",  "value": "400" },
+        { "type": "json-query", "custom": "json.erro",              "action": "equal",  "value": "CAMPOS_OBRIGATORIOS_AUSENTES" },
+        { "type": "json-query", "custom": "json.camposAusentes[0]", "action": "equal",  "value": "produto" }
+      ]
+    },
+    {
+      "_id": "req-pedido-body-vazio",
+      "colId": "eventos-collection",
+      "containerId": "folder-pedido",
+      "name": "Pedido — body vazio (400)",
+      "url": "http://localhost:3000/eventos/pedido",
+      "method": "POST",
+      "sortNum": 13000,
+      "created": "2026-05-13T00:00:00.000Z",
+      "modified": "2026-05-13T00:00:00.000Z",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": { "type": "json", "raw": "{}", "form": [] },
+      "tests": [
+        { "type": "res-code",   "custom": "",          "action": "equal", "value": "400" },
+        { "type": "json-query", "custom": "json.erro", "action": "equal", "value": "BODY_VAZIO" }
+      ]
+    },
+    {
+      "_id": "req-pagamento-valido",
+      "colId": "eventos-collection",
+      "containerId": "folder-pagamento",
+      "name": "Pagamento — válido (202)",
+      "url": "http://localhost:3000/eventos/pagamento",
+      "method": "POST",
+      "sortNum": 21000,
+      "created": "2026-05-13T00:00:00.000Z",
+      "modified": "2026-05-13T00:00:00.000Z",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"pedidoId\": \"abc-123\",\n  \"valor\": 5000,\n  \"metodo\": \"pix\"\n}",
+        "form": []
+      },
+      "tests": [
+        { "type": "res-code",   "custom": "",             "action": "equal", "value": "202" },
+        { "type": "json-query", "custom": "json.status",  "action": "equal", "value": "aceito" },
+        { "type": "json-query", "custom": "json.metodo",  "action": "equal", "value": "pix" }
+      ]
+    },
+    {
+      "_id": "req-pagamento-valor-negativo",
+      "colId": "eventos-collection",
+      "containerId": "folder-pagamento",
+      "name": "Pagamento — valor negativo (400)",
+      "url": "http://localhost:3000/eventos/pagamento",
+      "method": "POST",
+      "sortNum": 22000,
+      "created": "2026-05-13T00:00:00.000Z",
+      "modified": "2026-05-13T00:00:00.000Z",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"pedidoId\": \"abc-123\",\n  \"valor\": -100,\n  \"metodo\": \"pix\"\n}",
+        "form": []
+      },
+      "tests": [
+        { "type": "res-code",   "custom": "",          "action": "equal", "value": "400" },
+        { "type": "json-query", "custom": "json.erro", "action": "equal", "value": "VALOR_INVALIDO" }
+      ]
+    }
+  ]
+}
